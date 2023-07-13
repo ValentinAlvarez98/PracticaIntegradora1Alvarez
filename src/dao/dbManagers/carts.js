@@ -30,23 +30,29 @@ export default class CartsManager {
 
       };
 
-      saveCart = async cart => {
+      saveCart = async (cart) => {
 
             try {
 
-                  let result = await cartsModel.create(cart);
+                  const existingCart = await cartsModel.findOne({
+                        id: cart.id
+                  });
 
-                  if (result) {
+                  if (existingCart) {
 
-                        console.log("Carrito guardado en la base de datos");
+                        existingCart.products = cart.products;
+                        return await existingCart.save();
+
+                  } else {
+
+                        return await cartsModel.create(cart);
 
                   };
-
-                  return result;
 
             } catch (error) {
 
                   console.log("Error en saveCart: ", error);
+                  return null;
 
             };
 
@@ -77,11 +83,21 @@ export default class CartsManager {
       addProduct = async (cart, productId) => {
 
             try {
-                  const existingProduct = cart.products.find(product => product.product === productId);
+                  const existingProduct = cart.products.find(product => parseInt(product.product) === parseInt(productId));
 
                   if (existingProduct) {
 
                         existingProduct.quantity += 1;
+
+                        await cartsModel.updateOne({
+                              id: cart.id,
+                              "products.product": productId
+                        }, {
+                              $set: {
+                                    "products.$.quantity": existingProduct.quantity
+                              }
+                        });
+
 
                   } else {
 
