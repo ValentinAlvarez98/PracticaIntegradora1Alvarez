@@ -10,6 +10,25 @@ const productsFsManager = new ProductsFs();
 
 const router = Router();
 
+router.get('/', async (req, res) => {
+
+      try {
+
+            res.render('index');
+
+      } catch {
+
+            console.log("Error en endpoint /: ", error);
+
+            res.send({
+                  status: "error",
+                  payload: error
+            });
+
+      };
+
+});
+
 router.get('/home', async (req, res) => {
 
       try {

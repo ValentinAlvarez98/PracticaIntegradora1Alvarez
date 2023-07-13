@@ -38,6 +38,29 @@ app.use('/', viewsRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
 
+let messages = [];
+
 io.on('connection', socket => {
       console.log("Nuevo cliente conectado!");
+
+      socket.on('message', data => {
+
+            messages.push(data);
+            io.emit('messagesLogs', messages);
+            console.log(data);
+
+      });
+
+      socket.on('authenticated', data => {
+
+            socket.broadcast.emit('newUserConnected', data);
+
+      });
+
+      socket.on('disconnect', () => {
+
+            console.log("Cliente desconectado!");
+
+      });
+
 });
