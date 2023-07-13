@@ -2,13 +2,15 @@ import fs from 'fs';
 
 import path from 'path';
 
-import io from '../../app.js';
+import {
+      io
+} from '../../app.js';
 
 import Products from '../dbManagers/products.js';
 
 const productsManager = new Products();
 
-class ProductFsManager {
+export default class ProductFsManager {
 
       constructor() {
 
@@ -106,5 +108,3 @@ class ProductFsManager {
       };
 
 };
-
-export default ProductFsManager;

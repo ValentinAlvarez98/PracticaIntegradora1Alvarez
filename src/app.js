@@ -18,7 +18,7 @@ const httpServer = app.listen(PORT, () => {
       console.log(`Servidor escuchando desde el puerto ${PORT}`);
 });
 
-const io = new Server(httpServer);
+export const io = new Server(httpServer);
 
 mongoose.set('strictQuery', false);
 const URL = 'mongodb+srv://valentinalvarez1998:UMGgkpPEVuR082JW@primera-practica-integr.2ja87xe.mongodb.net/?retryWrites=true&w=majority';
@@ -32,8 +32,8 @@ app.use(express.urlencoded({
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
-app.set(express.static(__dirname + '/public'));
 
+app.use(express.static(__dirname + '/public'));
 app.use('/', viewsRouter)
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
@@ -41,5 +41,3 @@ app.use('/api/carts', cartsRouter);
 io.on('connection', socket => {
       console.log("Nuevo cliente conectado!");
 });
-
-export default io;

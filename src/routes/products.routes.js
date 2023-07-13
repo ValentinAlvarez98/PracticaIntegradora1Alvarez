@@ -3,9 +3,11 @@ import {
 } from 'express';
 
 import Products from "../dao/dbManagers/products.js";
+import ProductsFs from "../dao/fileManagers/products.js";
 
 const productsRouter = Router();
 const productsManager = new Products();
+const productsFsManager = new ProductsFs();
 
 productsRouter.get('/', async (req, res) => {
 
@@ -127,6 +129,7 @@ productsRouter.post('/', async (req, res) => {
             };
 
             let result = await productsManager.saveProduct(newProduct);
+            await productsFsManager.getAll();
 
             res.send({
                   status: "success",
@@ -191,6 +194,8 @@ productsRouter.put('/:id', async (req, res) => {
 
             let result = await productsManager.updateById(id, productUpdated);
 
+            await productsFsManager.getAll();
+
             if (!result) return res.status(400).send({
                   status: "error",
                   payload: "No se pudo actualizar el producto"
@@ -225,6 +230,8 @@ productsRouter.delete('/:id', async (req, res) => {
             });
 
             let result = await productsManager.deleteById(id);
+
+            await productsFsManager.getAll();
 
             if (!result) return res.status(400).send({
                   status: "error",
